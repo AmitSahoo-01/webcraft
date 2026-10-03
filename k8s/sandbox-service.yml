@@ -5,8 +5,8 @@ metadata:
 spec:
   selector:
     app:  sandbox
-  type:  ClusterIP 
+  type:   ClusterIP 
   ports:
-  - name:  main-sandbox-port
+  - name:  main-sandbox
     port:  80
     targetPort:  3000
