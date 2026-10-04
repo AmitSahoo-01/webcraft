@@ -1,4 +1,4 @@
-import {k8sApiCoreV1Api} from "./config.js";
+import {k8sCoreV1Api} from "./config.js";
 
 export async function createService(sandboxId) {
 
@@ -28,15 +28,15 @@ export async function createService(sandboxId) {
     }
 
     try {
-        const response = await k8sApiCoreV1Api.createNamespacedService({
+        const response = await k8sCoreV1Api.createNamespacedService({
             namespace: "default",
             body: serviceManifest
         });
 
-        console.log(`Service created: ${response.body.metadata.name}`);
+        // console.log(`Service created: ${response.body.metadata.name}`);
 
         return response;
-        
+
     } catch (error) {
         console.error("Error creating service:", error);
         throw error;
