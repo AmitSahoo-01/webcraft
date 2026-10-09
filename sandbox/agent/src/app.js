@@ -21,7 +21,7 @@ app.get("/", (req,res)=>{
     });
 });
 
-app.get("/list-files", async(req,res)=>{
+app.get("/list-files", async(req,res)=>{ 
 
     const listFiles =  async (dir,baseDir)=>{
         const entries = await fs.promises.readdir(dir,{withFileTypes:true});
@@ -78,18 +78,18 @@ app.get("/read-files", async(req,res)=>{
     const fileList = files.split(",");
 
     const results = await Promise.all(fileList.map(async(file)=>{
-        const filePath = `${working_dir}/${file}`;
+        const filePath = path.join(working_dir,file);
         try{
 
             const content = await fs.promises.readFile(filePath, "utf-8");
             return {
-                [filePath] : content
+                [filePath.replace(working_dir,'')] : content
             }
 
         } catch (error) {
             console.error(`Error reading ${file}:`, error);
             return {
-                [filePath]:`Error reading file:${error.message}`
+                [filePath.replace(working_dir,'')]:`Error reading file:${error.message}`
             }
         }
     }));   
@@ -160,6 +160,7 @@ app.post("/create-files", async(req,res)=>{
         const {file,content} = fileObj;
         const filePath = path.join(working_dir,file);
         try{
+            await fs.promises.mkdir(path.dirname(filePath),{recursive:true});
             await fs.promises.writeFile(filePath,content,'utf-8');
             return{
                 [filePath]:"file created successfully.",
@@ -170,6 +171,12 @@ app.post("/create-files", async(req,res)=>{
             }
         }
     }));
+
+    res.status(200).json({
+        message:"file created successfully",
+        results,
+        status:"success"
+    });
 });
 
 
